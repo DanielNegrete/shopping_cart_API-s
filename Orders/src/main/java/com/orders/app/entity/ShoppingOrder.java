@@ -1,11 +1,21 @@
-package com.orders.app.dto;
+package com.orders.app.entity;
 
 import java.util.List;
 
-import com.orders.app.entity.Cart;
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 
-public class OrderRequestDTO {
-	
+@Entity
+public class ShoppingOrder {
+
+	@Id
+	@GeneratedValue(strategy=GenerationType.AUTO)
+	private Integer orderId;
 	private String username;
 	private String date;
 	private String country;
@@ -16,10 +26,25 @@ public class OrderRequestDTO {
 	private String city;
 	private String phoneNumber;
 	private String postalCode;
+	
+	@ElementCollection
+	@JoinTable(name="cart", joinColumns = @JoinColumn(name = "orderId"))
 	private List<Cart> cart;
 	private String coupon;
 	private double totalPrice;
-
+	
+	public String getPhoneNumber() {
+		return phoneNumber;
+	}
+	public void setPhoneNumber(String phoneNumber) {
+		this.phoneNumber = phoneNumber;
+	}
+	public Integer getOrderId() {
+		return orderId;
+	}
+	public void setOrderId(Integer orderId) {
+		this.orderId = orderId;
+	}
 	public String getUsername() {
 		return username;
 	}
@@ -67,12 +92,6 @@ public class OrderRequestDTO {
 	}
 	public void setCity(String city) {
 		this.city = city;
-	}
-	public String getPhoneNumber() {
-		return phoneNumber;
-	}
-	public void setPhoneNumber(String phoneNumber) {
-		this.phoneNumber = phoneNumber;
 	}
 	public String getPostalCode() {
 		return postalCode;
