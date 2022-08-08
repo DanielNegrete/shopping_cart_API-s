@@ -47,16 +47,18 @@ public class ProductController {
 		return productRepository.findAll();
 	}
 	
-	@PostMapping(path="/update")
-	public ResponseEntity<ResponseDTO> updateProduct(@RequestParam Integer productId, @RequestBody ProductRequestDTO productRequestDTO){
+	@PostMapping(path="/update/{productId}")
+	public ResponseEntity<ResponseDTO> updateProduct(@PathVariable Integer productId, @RequestBody ProductRequestDTO productRequestDTO){
 		Optional<Product> product = productRepository.findById(productId);
 		ResponseDTO responseDTO = new ResponseDTO("", 0);
+		Product productU = product.get();
 		
 		if(product.isPresent()) {
-			product.get().setProductName(productRequestDTO.getProductName());
-			product.get().setProductCategorie(productRequestDTO.getProductCategorie());
-			product.get().setProductPrice(productRequestDTO.getProductPrice());
-			productRepository.save(product.get());
+			productU.setProductId(productId);
+			productU.setProductName(productRequestDTO.getProductName());
+			productU.setProductCategorie(productRequestDTO.getProductCategorie());
+			productU.setProductPrice(productRequestDTO.getProductPrice());
+			productRepository.save(productU);
 			responseDTO.setMessage("Product updated");
 			responseDTO.setStatusCode(200);
 		}else {
@@ -67,7 +69,7 @@ public class ProductController {
 	  	return new ResponseEntity<ResponseDTO>(responseDTO, HttpStatus.ACCEPTED);
 	}
 	
-	@PostMapping(path="/delete")
+	@GetMapping(path="/delete/{productId}")
 	public ResponseEntity<ResponseDTO> deleteProduct(@PathVariable Integer productId){
 		productRepository.deleteById(productId);
 		ResponseDTO responseDTO = new ResponseDTO("Product deleted", 200);
